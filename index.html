@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halim Keisha Althea - Data Science Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            light: '#1e293b',
+                            accent: '#38bdf8', // Light Blue
+                            secondary: '#818cf8', // Indigo
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Card Hover Effects */
+        .project-card {
+            transition: all 0.3s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2);
+        }
+
+        /* Canvas Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        /* Skill Bar Animation */
+        @keyframes fillBar {
+            from { width: 0; }
+            to { width: var(--target-width); }
+        }
+        .skill-fill {
+            animation: fillBar 1.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- Background Canvas for Particle Effect -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 font-mono font-bold text-xl text-brand-accent">
+                    &lt;Data/&gt;
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="hover:text-brand-accent transition-colors px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="#about" class="hover:text-brand-accent transition-colors px-3 py-2 rounded-md text-sm font-medium">About</a>
+                        <a href="#skills" class="hover:text-brand-accent transition-colors px-3 py-2 rounded-md text-sm font-medium">Skills</a>
+                        <a href="#projects" class="hover:text-brand-accent transition-colors px-3 py-2 rounded-md text-sm font-medium">Projects</a>
+                        <a href="#contact" class="bg-brand-accent text-slate-900 hover:bg-sky-400 px-4 py-2 rounded-md text-sm font-bold transition-colors">Contact Me</a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="#about" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#skills" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">Skills</a>
+                <a href="#projects" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">Projects</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse md:flex-row items-center">
+            <div class="w-full md:w-1/2 text-center md:text-left mt-8 md:mt-0">
+                <p class="text-brand-accent font-mono mb-4">Hello, my name is</p>
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight text-white">
+                    Halim Keisha <span class="text-gradient">Althea</span>
+                </h1>
+                <h2 class="text-2xl md:text-3xl text-slate-400 mb-6 font-light">
+                    I turn complex data into <span class="text-white font-semibold" id="typewriter"></span>
+                </h2>
+                <p class="text-slate-400 text-lg mb-8 max-w-lg mx-auto md:mx-0 leading-relaxed">
+                    Data Science Student specializing in Machine Learning, Predictive Analytics, and transforming raw numbers into actionable business strategies.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="#projects" class="px-8 py-3 bg-brand-accent text-slate-900 font-bold rounded hover:bg-sky-400 transition-colors">
+                        View Projects
+                    </a>
+                    <a href="#contact" class="px-8 py-3 border border-brand-accent text-brand-accent font-bold rounded hover:bg-brand-accent/10 transition-colors">
+                        Contact Me
+                    </a>
+                </div>
+                
+                <div class="mt-12 flex items-center justify-center md:justify-start space-x-6 text-slate-400">
+                    <a href="#" class="hover:text-white text-2xl transition-colors"><i class="fab fa-github"></i></a>
+                    <a href="#" class="hover:text-white text-2xl transition-colors"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="hover:text-white text-2xl transition-colors"><i class="fab fa-kaggle"></i></a>
+                    <a href="#" class="hover:text-white text-2xl transition-colors"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-1/2 flex justify-center relative">
+                <!-- Abstract Data Visual Element -->
+                <div class="relative w-64 h-64 md:w-96 md:h-96">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-accent to-brand-secondary rounded-full opacity-20 blur-3xl animate-pulse"></div>
+                    <div class="absolute inset-4 border border-slate-700/50 rounded-lg transform rotate-6 backdrop-blur-sm bg-slate-800/30 flex items-center justify-center">
+                        <div class="text-left p-6 font-mono text-xs md:text-sm text-sky-300">
+                            <p><span class="text-purple-400">import</span> pandas <span class="text-purple-400">as</span> pd</p>
+                            <p><span class="text-purple-400">import</span> numpy <span class="text-purple-400">as</span> np</p>
+                            <p><span class="text-purple-400">from</span> sklearn.model <span class="text-purple-400">import</span> RFC</p>
+                            <br>
+                            <p><span class="text-gray-400"># Train Model</span></p>
+                            <p>model = RFC(n_estimators=<span class="text-orange-400">100</span>)</p>
+                            <p>model.fit(X_train, y_train)</p>
+                            <br>
+                            <p><span class="text-green-400">>> Model Accuracy: 98.4%</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="min-h-screen flex flex-col justify-center py-20 bg-slate-900/50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold mb-12 text-center"><span class="border-b-4 border-brand-accent pb-2">About Me</span></h2>
+            
+            <div class="bg-slate-800 rounded-xl p-8 border border-slate-700 shadow-xl">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <div class="md:col-span-1 flex justify-center">
+                        <!-- Placeholder for User Image -->
+                        <div class="w-40 h-40 rounded-full bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center overflow-hidden border-4 border-slate-700">
+                            <span class="text-4xl font-bold text-slate-400">HK</span>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 space-y-4">
+                        <p class="text-slate-300 leading-relaxed">
+                            I am a final year <strong>Data Science Student</strong> passionate about uncovering hidden trends in complex datasets. My journey began with simple SQL queries and has evolved into building full-stack machine learning applications.
+                        </p>
+                        <p class="text-slate-300 leading-relaxed">
+                            Currently, I am focusing on <span class="text-brand-accent">Natural Language Processing</span> and Deep Learning. I enjoy participating in Kaggle competitions and contributing to open-source data visualization libraries.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-4">
+                            <span class="px-3 py-1 rounded-full bg-slate-700 text-xs font-mono text-sky-300">Problem Solver</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-700 text-xs font-mono text-sky-300">Continuous Learner</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-700 text-xs font-mono text-sky-300">Team Player</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="min-h-screen flex flex-col justify-center py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold mb-16 text-center"><span class="border-b-4 border-brand-accent pb-2">Technical Skills</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Programming & Tools -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-6 flex items-center text-white">
+                        <i class="fas fa-code text-brand-accent mr-3"></i> Languages & Libraries
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-slate-300">Python (Pandas, NumPy, Scikit)</span>
+                                <span class="text-sm font-medium text-brand-accent">90%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-brand-accent h-2.5 rounded-full skill-fill" style="--target-width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-slate-300">SQL (PostgreSQL, MySQL)</span>
+                                <span class="text-sm font-medium text-brand-accent">85%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-brand-accent h-2.5 rounded-full skill-fill" style="--target-width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-slate-300">R Language</span>
+                                <span class="text-sm font-medium text-brand-accent">70%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-brand-accent h-2.5 rounded-full skill-fill" style="--target-width: 70%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-slate-300">JavaScript / Web Vis (D3.js)</span>
+                                <span class="text-sm font-medium text-brand-accent">60%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-brand-accent h-2.5 rounded-full skill-fill" style="--target-width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theory & Concepts -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-6 flex items-center text-white">
+                        <i class="fas fa-brain text-brand-accent mr-3"></i> Core Competencies
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 text-center hover:border-brand-accent transition-colors">
+                            <i class="fas fa-chart-line text-3xl text-sky-400 mb-2"></i>
+                            <h4 class="font-bold text-white">Data Viz</h4>
+                            <p class="text-xs text-slate-400 mt-1">Tableau, PowerBI, Matplotlib</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 text-center hover:border-brand-accent transition-colors">
+                            <i class="fas fa-robot text-3xl text-purple-400 mb-2"></i>
+                            <h4 class="font-bold text-white">Machine Learning</h4>
+                            <p class="text-xs text-slate-400 mt-1">Regression, Classification, Clustering</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 text-center hover:border-brand-accent transition-colors">
+                            <i class="fas fa-database text-3xl text-green-400 mb-2"></i>
+                            <h4 class="font-bold text-white">Big Data</h4>
+                            <p class="text-xs text-slate-400 mt-1">Spark, Hadoop Basics</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 text-center hover:border-brand-accent transition-colors">
+                            <i class="fas fa-cogs text-3xl text-orange-400 mb-2"></i>
+                            <h4 class="font-bold text-white">Deep Learning</h4>
+                            <p class="text-xs text-slate-400 mt-1">TensorFlow, PyTorch</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="min-h-screen flex flex-col justify-center py-20 bg-slate-900/50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold mb-8 text-center"><span class="border-b-4 border-brand-accent pb-2">My Projects</span></h2>
+            
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="filter-btn active px-4 py-2 rounded-full bg-slate-700 text-white hover:bg-brand-accent hover:text-slate-900 transition-all text-sm font-semibold" data-filter="all">All</button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-slate-800 text-slate-300 hover:bg-brand-accent hover:text-slate-900 transition-all text-sm font-semibold" data-filter="ml">Machine Learning</button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-slate-800 text-slate-300 hover:bg-brand-accent hover:text-slate-900 transition-all text-sm font-semibold" data-filter="nlp">NLP</button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-slate-800 text-slate-300 hover:bg-brand-accent hover:text-slate-900 transition-all text-sm font-semibold" data-filter="viz">Visualization</button>
+            </div>
+
+            <!-- Project Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+                <!-- Projects injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="min-h-screen flex flex-col justify-center py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-8 text-white">Get In Touch</h2>
+            <p class="text-slate-400 mb-12 max-w-xl mx-auto">
+                Currently looking for internship opportunities or junior data scientist roles. Have a dataset that needs analyzing or a question about my work?
+            </p>
+            
+            <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 shadow-2xl">
+                <form class="space-y-6 text-left" onsubmit="event.preventDefault(); alert('Message sent (Mockup)!');">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Name</label>
+                            <input type="text" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent transition-colors" placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Email</label>
+                            <input type="email" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent transition-colors" placeholder="john@example.com">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Subject</label>
+                        <input type="text" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent transition-colors" placeholder="Project Inquiry">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Message</label>
+                        <textarea rows="4" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent transition-colors" placeholder="Your message here..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-brand-accent text-slate-900 font-bold py-3 rounded-lg hover:bg-sky-400 transition-transform hover:scale-[1.01]">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 py-8 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-slate-500 font-mono text-sm">
+                Built with <i class="fas fa-heart text-red-500 mx-1"></i> and <i class="fas fa-coffee text-amber-600 mx-1"></i> by Halim Keisha Althea
+            </p>
+            <p class="text-slate-600 text-xs mt-2">© 2023 Data Portfolio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript logic -->
+    <script>
+        // --- 1. Project Data Configuration ---
+        const projects = [
+            {
+                title: "Customer Churn Prediction",
+                category: "ml",
+                description: "Built a Random Forest classifier to predict customer churn for a telecom company. Achieved 92% accuracy and identified key churn drivers.",
+                tech: ["Python", "Scikit-Learn", "Pandas"],
+                link: "#",
+                github: "#"
+            },
+            {
+                title: "Stock Market Dashboard",
+                category: "viz",
+                description: "Interactive real-time dashboard visualizing S&P 500 stock trends using Streamlit and Plotly. Includes moving averages and volume analysis.",
+                tech: ["Streamlit", "Plotly", "Yahoo Finance API"],
+                link: "#",
+                github: "#"
+            },
+            {
+                title: "Twitter Sentiment Analysis",
+                category: "nlp",
+                description: "Analyzed 50k tweets to determine public sentiment regarding climate change using NLTK and LSTM networks.",
+                tech: ["Python", "TensorFlow", "NLTK"],
+                link: "#",
+                github: "#"
+            },
+            {
+                title: "House Price Regression",
+                category: "ml",
+                description: "Advanced regression analysis to predict housing prices in Ames, Iowa using feature engineering and Gradient Boosting.",
+                tech: ["XGBoost", "Python", "Matplotlib"],
+                link: "#",
+                github: "#"
+            },
+            {
+                title: "E-Commerce Recommendation",
+                category: "ml",
+                description: "Collaborative filtering system for a mock bookstore. Uses matrix factorization to suggest books based on user history.",
+                tech: ["Python", "Surprise Lib", "SQL"],
+                link: "#",
+                github: "#"
+            },
+            {
+                title: "COVID-19 Global Tracker",
+                category: "viz",
+                description: "Choropleth map visualization showing the spread of COVID-19 over time using D3.js and public WHO datasets.",
+                tech: ["JavaScript", "D3.js", "HTML/CSS"],
+                link: "#",
+                github: "#"
+            }
+        ];
+
+        // --- 2. Render Projects ---
+        const grid = document.getElementById('projects-grid');
+        
+        function renderProjects(filter = 'all') {
+            grid.innerHTML = '';
+            
+            const filteredProjects = filter === 'all' 
+                ? projects 
+                : projects.filter(p => p.category === filter);
+                
+            filteredProjects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-800 rounded-xl overflow-hidden border border-slate-700 project-card flex flex-col h-full';
+                
+                // Create tags HTML
+                const tagsHtml = project.tech.map(t => 
+                    `<span class="px-2 py-1 bg-slate-700 text-sky-300 text-xs rounded-md font-mono mr-2 mb-2 inline-block">${t}</span>`
+                ).join('');
+
+                card.innerHTML = `
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <i class="fas fa-folder text-4xl text-brand-secondary opacity-80"></i>
+                            <div class="flex space-x-3">
+                                <a href="${project.github}" class="text-slate-400 hover:text-white transition-colors"><i class="fab fa-github text-xl"></i></a>
+                                <a href="${project.link}" class="text-slate-400 hover:text-white transition-colors"><i class="fas fa-external-link-alt text-xl"></i></a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">${project.title}</h3>
+                        <p class="text-slate-400 text-sm mb-4 flex-grow">${project.description}</p>
+                        <div class="mt-auto">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Initialize projects
+        renderProjects();
+
+        // --- 3. Filter Logic ---
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Remove active class from all
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('bg-slate-700', 'text-white');
+                    b.classList.add('bg-slate-800', 'text-slate-300');
+                });
+                
+                // Add active to clicked
+                e.target.classList.remove('bg-slate-800', 'text-slate-300');
+                e.target.classList.add('bg-slate-700', 'text-white');
+                
+                renderProjects(e.target.dataset.filter);
+            });
+        });
+
+        // --- 4. Typewriter Effect ---
+        const words = ["Insights.", "Predictions.", "Strategies.", "Solutions."];
+        let i = 0;
+        let timer;
+
+        function typeWriter() {
+            const heading = document.getElementById("typewriter");
+            const word = words[i];
+            let n = 0;
+            let isDeleting = false;
+
+            function type() {
+                heading.innerHTML = word.substring(0, n);
+                
+                if (!isDeleting) {
+                    if (n < word.length) {
+                        n++;
+                        setTimeout(type, 100);
+                    } else {
+                        isDeleting = true;
+                        setTimeout(type, 2000); // Wait before deleting
+                    }
+                } else {
+                    if (n > 0) {
+                        n--;
+                        setTimeout(type, 50);
+                    } else {
+                        isDeleting = false;
+                        i = (i + 1) % words.length;
+                        setTimeout(typeWriter, 500); // Wait before next word
+                        return;
+                    }
+                }
+            }
+            type();
+        }
+        typeWriter();
+
+        // --- 5. Background Network Animation (Canvas) ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.5)'; // Light blue
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.min(window.innerWidth / 15, 100); // Responsive count
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach((p, index) => {
+                p.update();
+                p.draw();
+
+                // Draw connections
+                for (let j = index + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(56, 189, 248, ${0.1 - dist/1500})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            resize();
+            initParticles();
+        });
+
+        // Start Animation
+        resize();
+        initParticles();
+        animate();
+
+        // --- 6. Mobile Menu Toggle ---
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
